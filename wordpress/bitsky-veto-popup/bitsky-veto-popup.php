@@ -272,8 +272,30 @@ register_activation_hook(__FILE__, function () {
   if ( ! file_exists(BS_VETO_POPUP_CONF) ) {
     bsvp_write_config( bsvp_default_config() );
   }
+  add_option('bsvp_do_activation_redirect', 1);
 });
 
-if ( ! is_writable( dirname(BS_VETO_POPUP_CONF) ) ) {
-  echo '<div class="notice notice-warning"><p>Katalog wtyczki nie jest zapisywalny. Zmień uprawnienia, aby zapisywać <code>config.json</code>.</p></div>';
-}
+add_action('admin_init', function () {
+  if ( ! is_admin() ) return;
+
+  $do_redirect = get_option('bsvp_do_activation_redirect', 0);
+  if ( ! $do_redirect ) return;
+
+  // nie redirectuj przy aktywacjach zbiorczych lub w network admin
+  if ( isset($_GET['activate-multi']) || is_network_admin() ) {
+    delete_option('bsvp_do_activation_redirect');
+    return;
+  }
+
+  delete_option('bsvp_do_activation_redirect');
+  wp_safe_redirect( admin_url('options-general.php?page=bitsky-veto-popup') );
+  exit;
+});
+
+
+add_action('admin_notices', function () {
+  if ( current_user_can('manage_options') && ! is_writable( dirname(BS_VETO_POPUP_CONF) ) ) {
+    echo '<div class="notice notice-warning"><p>Katalog wtyczki nie jest zapisywalny. Zmień uprawnienia, aby zapisywać <code>config.json</code>.</p></div>';
+  }
+});
+
