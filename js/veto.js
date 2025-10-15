@@ -22,7 +22,7 @@
        * 'minutes'  – pokazuj ponownie po X minutach (ustaw w COOKIE_MINUTES)
        * 'never'    – po pierwszym wyświetleniu nigdy więcej (ustawiamy bardzo długie max-age)
        */
-      SHOW_FREQUENCY: "minutes", // 'always' | 'minutes' | 'never'
+      SHOW_FREQUENCY: "never", // 'always' | 'minutes' | 'never'
       COOKIE_MINUTES: 1440, // tylko gdy SHOW_FREQUENCY === 'minutes'
       COOKIE_NAME: "veto_black_popup_shown",
       COOKIE_PATH: "/", // zazwyczaj "/"

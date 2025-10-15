@@ -21,7 +21,7 @@ function bsvp_default_config() {
     'TEXT_HTML' => "Apel do Prezydenta<br/>Rzeczypospolitej Polskiej<br/>o zawetowanie Ustawy o<br/>rynku kryptoaktywów",
     'DETAILS_URL' => 'https://bitcoin.org.pl/apel-do-prezydenta-rzeczypospolitej-polskiej/',
     'OPEN_DETAILS_IN_NEW_WINDOW' => true,
-    'SHOW_FREQUENCY' => 'minutes', // 'always' | 'minutes' | 'never'
+    'SHOW_FREQUENCY' => 'never', // 'always' | 'minutes' | 'never'
     'COOKIE_MINUTES' => 1440,
     'COOKIE_NAME' => 'veto_black_popup_shown',
     'COOKIE_PATH' => '/',
