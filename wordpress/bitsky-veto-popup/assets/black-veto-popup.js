@@ -104,7 +104,7 @@
 }
 .veto__content { padding: ${cfg.PADDING_DESKTOP}px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
 .veto__close {
-  position: absolute; right: 12px; top: 8px; width: 44px; height: 44px;
+  position: absolute; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 8px); width: 44px; height: 44px;
   display: inline-flex; align-items: center; justify-content: center;
   font-family: ${cfg.FONT_FAMILY}; font-weight: ${cfg.FONT_WEIGHT}; font-size: 28px;
   line-height: 1; color: #fff; background: transparent; border: none; cursor: pointer; user-select: none;
@@ -130,7 +130,7 @@
 
 /* MOBILE – fullscreen, tekst center, przyciski na dole */
 @media (max-width: ${cfg.MOBILE_BREAKPOINT}px) {
-  .veto__popup { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; border-radius: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .veto__popup { width: 100vw; height: var(--veto-vh, 100dvh); max-width: 100vw; max-height: var(--veto-vh, 100dvh); border-radius: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; }
   .veto__content { flex: 1; width: 100%; padding: ${cfg.PADDING_MOBILE}px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; gap: 18px; }
   .veto__text { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: ${cfg.FONT_SIZE_MOBILE}; line-height: 1.2; }
   .veto__btns { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
@@ -146,6 +146,20 @@
     const host = document.createElement("div");
     host.setAttribute("id", "veto-black-popup-host");
     const shadow = host.attachShadow({ mode: "open" });
+
+    // Ustal dynamiczną wysokość widocznego viewportu dla mobile (adres bar safe)
+    function __setVetoVH() {
+      const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      host.style.setProperty('--veto-vh', h + 'px');
+    }
+    __setVetoVH();
+    window.addEventListener('resize', __setVetoVH, { passive: true });
+    window.addEventListener('orientationchange', __setVetoVH, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', __setVetoVH, { passive: true });
+      window.visualViewport.addEventListener('scroll', __setVetoVH, { passive: true });
+    }
+
 
     const style = document.createElement("style");
     style.textContent = stylesCSS(CONFIG);

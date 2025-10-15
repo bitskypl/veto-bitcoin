@@ -182,7 +182,7 @@
   }
   .veto__close {
     position: absolute;
-    right: 12px; top: 8px;
+    right: 12px; top: calc(env(safe-area-inset-top, 0px) + 8px);
     width: 44px; height: 44px;
     display: inline-flex; align-items: center; justify-content: center;
     font-family: ${cfg.FONT_FAMILY};
@@ -250,9 +250,9 @@
   @media (max-width: ${cfg.MOBILE_BREAKPOINT}px) {
     .veto__popup {
       width: 100vw;
-      height: 100vh;
+      height: var(--veto-vh, 100dvh);
       max-width: 100vw;
-      max-height: 100vh;
+      max-height: var(--veto-vh, 100dvh);
       border-radius: 0;
       display: flex;
       flex-direction: column;
@@ -309,6 +309,19 @@
       host.setAttribute("id", "veto-black-popup-host");
       // Nie skalujemy body, całość jest w osobnym stacking context:
       const shadow = host.attachShadow({ mode: "open" });
+
+      // Ustal dynamiczną wysokość widocznego viewportu dla mobile (adres bar safe)
+      function __setVetoVH() {
+        const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        host.style.setProperty('--veto-vh', h + 'px');
+      }
+      __setVetoVH();
+      window.addEventListener('resize', __setVetoVH, { passive: true });
+      window.addEventListener('orientationchange', __setVetoVH, { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', __setVetoVH, { passive: true });
+        window.visualViewport.addEventListener('scroll', __setVetoVH, { passive: true });
+      }
   
       // style
       const style = document.createElement("style");
